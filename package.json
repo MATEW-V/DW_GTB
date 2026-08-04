@@ -1,0 +1,25 @@
+{
+  "name": "guessthebuild",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  
+  "scripts": {
+    "server": "node server/index.js",
+    "client": "npm run dev --prefix client",
+    "dev": "npx concurrently \"npm run server\" \"npm run client\""
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MATEW-V/DW_GTB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MATEW-V/DW_GTB/issues"
+  },
+  "homepage": "https://github.com/MATEW-V/DW_GTB#readme"
+}
