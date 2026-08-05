@@ -1,0 +1,79 @@
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 0 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background-color: #ffffff;
+}
+
+.header-left, .header-right {
+  display: flex;
+  align-items: center;
+  flex: 1; /* Gives equal width to sides so title stays perfectly centered */
+}
+
+.header-right {
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  color: #1a202c;
+  text-align: center;
+}
+
+/* 3-Line Hamburger Button Styling */
+.menu-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.menu-line {
+  width: 100%;
+  height: 2px;
+  background-color: #1a202c;
+  border-radius: 2px;
+}
+
+/* Right Side Button Styling */
+.nav-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tutorial-btn {
+  background: none;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+.tutorial-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.login-btn {
+  background-color: #1a202c;
+  border: 1px solid #1a202c;
+  color: #ffffff;
+}
+
+.login-btn:hover {
+  background-color: #2d3748;
+}

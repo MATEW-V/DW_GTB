@@ -1,0 +1,20 @@
+/* Container for the central page layout content */
+.home-content {
+  display: flex;
+  flex-direction: column; /* Stacks the h2 and the Feature component vertically */
+  align-items: center;    /* Horizontally centers the items inside the container */
+  justify-content: center; /* Vertically centers the content inside the frame */
+  flex-grow: 1;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+/* Specific styling for the welcome title text */
+.home-content h2 {
+  text-align: center;
+  margin: 0 0 24px 0; /* Adds crisp spacing below the text before the feature grid starts */
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a202c;
+  font-family: Arial, sans-serif;
+}
