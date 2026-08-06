@@ -5,7 +5,7 @@
   max-height: 1400px;
   margin: 0 auto;
   padding: 10px;
-  background-color: brown;
+  background-color: rgb(127, 0, 0);
   box-sizing: border-box;
 }
 
@@ -26,6 +26,20 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+.feature-buttons {
+  background-color: #d8d7ca;
+  border: 10px solid #232323;
+  padding: 20px;
+}
+
+.soo, .som, .sob, .submit, .reset{
+  background-color: #232323;
+  color: #ffffff;
+  padding: 8px;
+  margin: 2px;
+  border-color: #232323;
+  border-radius: 4px;
+}
 .part-title {
   margin: 0 0 16px 0;
   font-size: 18px;
@@ -50,26 +64,37 @@
   padding-bottom: 8px;
   border-bottom: 1px dashed #f1f5f9; /* Subtle list divider line */
 }
-
+.preshrine {
+  margin-left: auto;
+  margin-right: 8px;
+  color: #565656;
+}
 .feature-row-line:last-child {
   border-bottom: none;
   padding-bottom: 0;
 }
+.buildindicator {
+  display: block;
+  width: 24px;
+  height: 24px; 
+  margin-left: 16px;
+  background-color: #00a24c; 
+}
 
 .feature-label-text {
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   color: #232323;
 }
 
 .feature-input-box {
-  width: 40px;
+  width: 25px;
   padding: 6px 10px;
   font-size: 14px;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
   outline: none;
-  background-color: #f8fafc;
+  background-color: #f6f6f6;
   text-align: right;
   transition: all 0.15s ease;
 }

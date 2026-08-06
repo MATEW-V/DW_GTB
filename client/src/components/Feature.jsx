@@ -22,7 +22,6 @@ const handleAChange = (index, value) => {
 const handleBChange = (index, value) => {
   // Strip everything that isn't a digit
   let cleanValue = value.replace(/[^0-9]/g, '');
-
   // Cap between 0 and 100
   if (cleanValue !== '') {
     const num = Number(cleanValue);
@@ -32,7 +31,6 @@ const handleBChange = (index, value) => {
 
   setPartBValues(prev => prev.map((val, i) => i === index ? cleanValue : val));
 };
-
 
   const coreLabels = ["Strength", "Agility", "Fortitude", "Inteligence", "Willpower", "Charisma"];
   const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
@@ -47,6 +45,7 @@ const handleBChange = (index, value) => {
             {coreLabels.map((coreLabels, index) => (
               <div key={`partA-${index}`} className="feature-row-line">
                 <span className="feature-label-text">{coreLabels}:</span>
+                <p className="preshrine">0</p>
                 <input 
                     type="text" 
                     className="feature-input-box" 
@@ -54,6 +53,7 @@ const handleBChange = (index, value) => {
                     value={partAValues[index]}
                     onChange={(e) => handleAChange(index, e.target.value)}
                   />
+                  <div class="buildindicator"></div>
               </div>
             ))}
           </div>
@@ -65,6 +65,7 @@ const handleBChange = (index, value) => {
             {attunmentLabels.map((attunmentLabels, index) => (
               <div key={`partB-${index}`} className="feature-row-line">
                 <span className="feature-label-text">{attunmentLabels}:</span>
+                <p className="preshrine">0</p>
                 <input 
                     type="text"
                     className="feature-input-box" 
@@ -72,13 +73,15 @@ const handleBChange = (index, value) => {
                     value={partBValues[index]}
                     onChange={(e) => handleBChange(index, e.target.value)}
                   />
+                  <div class="buildindicator"></div>
               </div>
             ))}
           </div>
         </div>
       </div>{/* featuresidegrid */}
       <div className="feature-buttons">
-        <h3 className="part-title">SHRINES&BUTTONS</h3>
+        <h3 className="part-title">SHRINES & BUTTONS</h3>
+        <p className="feature-label-text">Points: 330</p>
             <button className="soo">Shrine of Order</ button>
             <button className="som">Shrine of Mastery</ button>
             <button className="sob">Shrine of Blasphemy</ button>
