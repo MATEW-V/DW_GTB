@@ -1,8 +1,11 @@
 .feature-wrapper {
   width: 100%;
-  max-width: 900px; /* Aligned nicely for two columns */
+  max-width: 620px; 
+  height: 100%;
+  max-height: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 10px;
+  background-color: brown;
   box-sizing: border-box;
 }
 
@@ -10,24 +13,25 @@
 .feature-side-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 Equal Columns */
-  gap: 30px; /* Space between the left and right card */
+  background-color: aliceblue;
+  width: 600px;
 }
 
 /* Individual card container block */
 .feature-part-card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  background-color: #d8d7ca;
+  border: 10px solid #232323;
   padding: 20px;
+  width: 240px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .part-title {
   margin: 0 0 16px 0;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #64748b;
+  color: #232323;
   text-transform: uppercase;
 }
 
@@ -35,7 +39,7 @@
 .vertical-rows-container {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Spaces layout lines vertically */
+  gap: 6px; /* Spaces layout lines vertically */
 }
 
 /* Single line item layout separating text from its input box */
@@ -53,13 +57,13 @@
 }
 
 .feature-label-text {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
-  color: #334155;
+  color: #232323;
 }
 
 .feature-input-box {
-  width: 80px;
+  width: 40px;
   padding: 6px 10px;
   font-size: 14px;
   border: 1px solid #cbd5e1;
