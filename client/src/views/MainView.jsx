@@ -9,7 +9,7 @@ export default function HomeView() {
     <div className="home-view-container">
       <Header />
       <main className="home-content">
-        <h2>Watch the Chime Clip</h2>
+        <h2>chimeclipembed</h2>
         <Feature />
       </main>
       <Footer />

@@ -8,9 +8,7 @@ export default function Feature() {
   const coreLabels = ["Strength", "Agility", "Fortitude", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
   const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
 
-  const totalPointUsed =
-    coreValues.reduce((sum, val) => sum + Number(val || 0), 0) +
-    attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
+  const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
 
   const pointsRemaining = 330 - totalPointUsed;
 

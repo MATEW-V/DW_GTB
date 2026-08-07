@@ -53,7 +53,7 @@
 .vertical-rows-container {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* Spaces layout lines vertically */
+  gap: 0px; /* Spaces layout lines vertically */
 }
 
 /* Single line item layout separating text from its input box */
@@ -61,8 +61,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed #f1f5f9; /* Subtle list divider line */
+  height: 40px;
 }
 .preshrine {
   margin-left: auto;
@@ -71,7 +70,6 @@
 }
 .feature-row-line:last-child {
   border-bottom: none;
-  padding-bottom: 0;
 }
 .buildindicator {
   display: block;
