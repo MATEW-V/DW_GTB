@@ -4,6 +4,9 @@ import './Feature.css';
 export default function Feature() {
   const [coreValues, setCoreValues] = useState(Array(9).fill(''));
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
+  const [preCoreValues, setPreCoreValues] = useState(Array(9).fill('0'));
+  const [preAttunValues, setPreAttunValues] = useState(Array(7).fill('0'));
+
 
   const coreLabels = ["Strength", "Agility", "Fortitude", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
   const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
@@ -39,11 +42,16 @@ export default function Feature() {
       setAttunValues(prev => prev.map((val, i) => i === index ? cleanValue : val));
     }
   };
+  const handleSOO = () => {
+    setPreCoreValues([...coreValues]);
+    setPreAttunValues([...attunValues]);
+  }
 
   const handleReset = () => {
-    // Restore both arrays back to empty values
     setCoreValues(Array(9).fill(''));
     setAttunValues(Array(7).fill(''));
+    setPreCoreValues(Array(9).fill('0'));
+    setPreAttunValues(Array(7).fill('0'));
   };
 
   return (
@@ -62,7 +70,7 @@ export default function Feature() {
             {coreLabels.slice(6, 9).map((coreLabels, index) => (
               <div key={`partA-${index + 6}`} className="feature-row-line">
                 <span className="feature-label-text">{coreLabels}:</span>
-                <p className="preshrine">0</p>
+                <p className="preshrine">{preCoreValues[index+6]}</p>
                 <input
                   type="text"
                   className="feature-input-box"
@@ -85,7 +93,7 @@ export default function Feature() {
             {coreLabels.slice(0, 6).map((coreLabels, index) => (
               <div key={`partA-${index}`} className="feature-row-line">
                 <span className="feature-label-text">{coreLabels}:</span>
-                <p className="preshrine">0</p>
+                <p className="preshrine">{preCoreValues[index]}</p>
                 <input
                   type="text"
                   className="feature-input-box"
@@ -106,7 +114,7 @@ export default function Feature() {
             {attunmentLabels.map((attunmentLabels, index) => (
               <div key={`partB-${index}`} className="feature-row-line">
                 <span className="feature-label-text">{attunmentLabels}:</span>
-                <p className="preshrine">0</p>
+                <p className="preshrine">{preAttunValues[index]}</p>
                 <input
                   type="text"
                   className="feature-input-box"
@@ -124,9 +132,8 @@ export default function Feature() {
       <div className="feature-buttons">
         <h3 className="part-title">SHRINES & BUTTONS</h3>
         <p className="feature-label-text">Points Remaining: {pointsRemaining}</p>
-        <button className="soo">Shrine of Order</button>
+        <button className="soo" onClick={handleSOO}>Shrine of Order</button>
         <button className="som">Shrine of Mastery</button>
-        <button className="sob">Shrine of Blasphemy</button>
         <button className="reset" onClick={handleReset}>Reset</button>
         <button className="submit">Submit</button>
       </div> {/* shrine, submit, extra buttons*/}
