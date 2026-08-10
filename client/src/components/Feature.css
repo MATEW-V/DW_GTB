@@ -10,15 +10,13 @@
   box-sizing: border-box;
 }
 
-/* Forces the two main card blocks to sit next to each other */
 .feature-side-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 Equal Columns */
+  grid-template-columns: repeat(2, 1fr);
   background-color: aliceblue;
   width: 600px;
 }
 
-/* Individual card container block */
 .feature-part-card {
   background-color: #d8d7ca;
   border: 10px solid #232323;
@@ -56,14 +54,11 @@
   font-weight: 700;
   color: #232323;
 }
-/* Vertical stack container holding the 6 inner lines */
 .vertical-rows-container {
   display: flex;
   flex-direction: column;
-  gap: 0px; /* Spaces layout lines vertically */
 }
 
-/* Single line item layout separating text from its input box */
 .feature-row-line {
   display: flex;
   justify-content: space-between;
@@ -83,6 +78,7 @@
   width: 24px;
   height: 24px; 
   margin-left: 16px;
+  border-radius: 4px;
   background-color: #00a24c; 
 }
 
@@ -110,7 +106,6 @@
   box-shadow: 0 0 0 2px rgba(26, 32, 44, 0.05);
 }
 
-/* Responsive fallback: stacks the two cards on top of each other on small mobile screens */
 @media (max-width: 640px) {
   .feature-side-grid {
     grid-template-columns: 1fr;

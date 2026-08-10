@@ -18,3 +18,17 @@
   color: #ffffff;
   font-family: Arial, sans-serif;
 }
+.main-side-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: auto;
+  width: 1200px;
+}
+.clipbox {
+  display: block;
+  width: 600px;
+  height: 824px; 
+  margin-right: 16px;
+  border-radius: 4px;
+  background-color: #ffffff; 
+}

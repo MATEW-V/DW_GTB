@@ -9,8 +9,11 @@ export default function HomeView() {
     <div className="home-view-container">
       <Header />
       <main className="home-content">
-        <h2>chimeclipembed</h2>
-        <Feature />
+        <h2>goodluck</h2>
+        <div className='main-side-grid'>
+          <div className="clipbox"></div>
+          <Feature />
+        </div>
       </main>
       <Footer />
     </div>
