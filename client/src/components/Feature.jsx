@@ -42,10 +42,12 @@ export default function Feature() {
   };
 
   const handleLoadPre = () => {
-    if (!preCoreValues.every(element => element === "") && (!preAttunValues.every(element => element === ""))) {
+    if (!preCoreValues.every(element => element === "")) {
       setCoreValues(preCoreValues);
-      setAttunValues(preAttunValues);
       setPreCoreValues(Array(9).fill(''));
+    }
+    if (!preAttunValues.every(element => element === "")) {
+      setAttunValues(preAttunValues);
       setPreAttunValues(Array(7).fill(''));
     }
   }
@@ -166,8 +168,8 @@ export default function Feature() {
           </div>
         </div>
 
-        {/* weapon */}
-        <div className="feature-part-card">
+
+        <div className="feature-part-card">{/* weapon */}
           <h3 className="part-title">Weapon</h3>
           <div className="vertical-rows-container">
             {coreLabels.slice(6, 9).map((coreLabels, index) => (
@@ -189,8 +191,7 @@ export default function Feature() {
       </div>
 
       <div className="feature-side-grid">
-        {/* Core stats */}
-        <div className="feature-part-card">
+        <div className="feature-part-card">{/* Core stats */}
           <h3 className="part-title">Core Stats</h3>
           <div className="vertical-rows-container">
             {coreLabels.slice(0, 6).map((coreLabels, index) => (
@@ -204,14 +205,13 @@ export default function Feature() {
                   value={coreValues[index]}
                   onChange={(e) => handleStatChange('A', index, e.target.value)}
                 />
-                <div className="buildindicator"></div>
+                <div className="stat-indicator"></div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Attunement stats*/}
-        <div className="feature-part-card">
+        <div className="feature-part-card">{/* Attunement stats*/}
           <h3 className="part-title">Attunements</h3>
           <div className="vertical-rows-container">
             {attunmentLabels.map((attunmentLabels, index) => (
@@ -225,13 +225,14 @@ export default function Feature() {
                   value={attunValues[index]}
                   onChange={(e) => handleStatChange('B', index, e.target.value)}
                 />
-                <div className="buildindicator"></div>
+                <div className="stat-indicator"></div>
               </div>
             ))}
           </div>
         </div>
+      </div>
 
-      </div>{/* featuresidegrid */}
+      {/* shrine, submit, extra buttons*/}
       <div className="feature-buttons">
         <h3 className="part-title">SHRINES & BUTTONS</h3>
         <p className="feature-label-text">Points Remaining: {pointsRemaining}</p>
@@ -239,7 +240,7 @@ export default function Feature() {
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
         <button className="reset" onClick={handleReset}>Reset</button>
         <button className="submit">Submit</button>
-      </div> {/* shrine, submit, extra buttons*/}
+      </div>
     </div>
   );
 }

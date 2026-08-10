@@ -4,8 +4,8 @@
   align-items: center;
   height: 60px; /* Same exact height as the header */
   padding: 0 20px;
-  border-top: 1px solid #e2e8f0; /* Flipped to top border, matching grey line */
-  background-color: #ffffff;
+  border-top: 1px solid #ffffff; /* Flipped to top border, matching grey line */
+  background-color: #232323;
   margin-top: auto; /* Keeps footer pinned to viewport bottom */
 }
 
@@ -42,12 +42,12 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   margin: 0;
-  color: #1a202c;
+  color: #ffffff;
 }
 
 .footer-subtext {
   font-size: 10px;
-  color: #94a3b8;
+  color: #aeb4bd;
   margin: 2px 0 0 0;
 }
 
@@ -55,7 +55,7 @@
 .social-btn {
   background: none;
   border: none;
-  color: #475569;
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
