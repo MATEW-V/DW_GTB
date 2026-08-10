@@ -28,51 +28,118 @@ export default function Feature() {
         num = maxAllowedForThisField;
       }
 
-      // Individual field cap (0 - 100) stat limits
+      // stat lims
       if (num > 100) num = 100;
       if (num < 0) num = 0;
       cleanValue = String(num);
     }
 
-    // Dispatch updates to the correct state buckets
     if (part === 'A') {
       setCoreValues(prev => prev.map((val, i) => i === index ? cleanValue : val));
     } else {
       setAttunValues(prev => prev.map((val, i) => i === index ? cleanValue : val));
     }
   };
-  const handleSOO = () => {
+
+  const handleSOO = () => { //ty cyfer for algo
     setPreCoreValues([...coreValues]);
     setPreAttunValues([...attunValues]);
-    let internalCore = [...preCoreValues];
-    let internalAttun = [...preAttunValues];
-    console.log("shrined");
 
-    let statNum = 0;
+    let internalCore = [...coreValues].map(Number);
+    let internalAttun = [...attunValues].map(Number);
+    let affectedCore = [];
+    let affectedAttun = [];
     let totalShrine = 0;
-    let bottleneck = false;
+
+    const originalCore = [...coreValues].map(Number);
+    const originalAttun = [...attunValues].map(Number);
 
     for (let i = 0; i < 9; i++) {
-      if (coreValues[i] >= 1) {
-        statNum += 1;
-        totalShrine += Number(coreValues[i]);
+      if (originalCore[i] > 0) {
+        affectedCore.push(i);
+        totalShrine += originalCore[i];
       }
-      if (attunValues[i] >= 1) {
-        statNum += 1;
-        totalShrine += Number(attunValues[i]);
-      }
-    }
-    for (let i = 0; i < 9; i++) {
-      if (coreValues[i] >= 1) {
-        internalCore[i] = totalShrine / statNum;
-      }
-      if (attunValues[i] >= 1) {
-        internalAttun[i] = totalShrine / statNum;
+      if (originalAttun[i] > 0) {
+        affectedAttun.push(i);
+        totalShrine += originalAttun[i];
       }
     }
-    console.log(internalCore);
-    console.log(internalAttun);
-  }
+
+    const totalAffectedCount = affectedCore.length + affectedAttun.length;
+    if (totalAffectedCount === 0) return;
+
+    const initialAverage = totalShrine / totalAffectedCount;
+    affectedCore.forEach((i) => (internalCore[i] = initialAverage));
+    affectedAttun.forEach((i) => (internalAttun[i] = initialAverage));
+
+    const MAXIMUM_REDUCTION = 25;
+    let bottleneckedCore = new Set();
+    let bottleneckedDivideBy = totalAffectedCount;
+    let hasBottleneckedThisPass;
+
+    let previousCore = [...internalCore];
+    let previousAttun = [...internalAttun];
+
+    do {
+      let bottleneckedPoints = 0;
+      hasBottleneckedThisPass = false;
+
+      // Check Core Stats for bottlenecking (Attunements are immune to this cap)
+      for (let i of affectedCore) {
+        if (!bottleneckedCore.has(i)) {
+          const drop = originalCore[i] - internalCore[i];
+
+          if (drop > MAXIMUM_REDUCTION) {
+            internalCore[i] = originalCore[i] - MAXIMUM_REDUCTION;
+
+            bottleneckedPoints += internalCore[i] - previousCore[i];
+            bottleneckedCore.add(i);
+            bottleneckedDivideBy--;
+          }
+        }
+      }
+
+      if (bottleneckedPoints !== 0 && bottleneckedDivideBy > 0) {
+        const reductionChunk = bottleneckedPoints / bottleneckedDivideBy;
+
+        for (let i of affectedCore) {
+          if (!bottleneckedCore.has(i)) {
+            internalCore[i] -= reductionChunk;
+            // Verify if this new subtraction pushed this core stat past its 25 limit
+            if (originalCore[i] - internalCore[i] > MAXIMUM_REDUCTION) {
+              hasBottleneckedThisPass = true;
+            }
+          }
+        }
+        for (let i of affectedAttun) {
+          internalAttun[i] -= reductionChunk;
+        }
+      }
+
+      previousCore = [...internalCore];
+      previousAttun = [...internalAttun];
+
+    } while (hasBottleneckedThisPass);
+
+    affectedCore.forEach((i) => (internalCore[i] = Math.floor(internalCore[i])));
+    affectedAttun.forEach((i) => (internalAttun[i] = Math.floor(internalAttun[i])));
+
+    let pointsSpentAfterShrine = 0;
+    affectedCore.forEach((i) => (pointsSpentAfterShrine += internalCore[i]));
+    affectedAttun.forEach((i) => (pointsSpentAfterShrine += internalAttun[i]));
+
+    let sparePoints = totalShrine - pointsSpentAfterShrine;
+
+    if (sparePoints >= totalAffectedCount) {
+      affectedCore.forEach((i) => (internalCore[i] += 1));
+      affectedAttun.forEach((i) => (internalAttun[i] += 1));
+      sparePoints -= totalAffectedCount;
+    }
+
+    setCoreValues(internalCore);
+    setAttunValues(internalAttun);
+  };
+
 
   const handleReset = () => {
     setCoreValues(Array(9).fill(''));
