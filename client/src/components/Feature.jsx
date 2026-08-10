@@ -41,6 +41,15 @@ export default function Feature() {
     }
   };
 
+  const handleLoadPre = () => {
+    if (!preCoreValues.every(element => element === "") && (!preAttunValues.every(element => element === ""))) {
+      setCoreValues(preCoreValues);
+      setAttunValues(preAttunValues);
+      setPreCoreValues(Array(9).fill(''));
+      setPreAttunValues(Array(7).fill(''));
+    }
+  }
+
   const handleSOO = () => { //ty cyfer for algo
     setPreCoreValues([...coreValues]);
     setPreAttunValues([...attunValues]);
@@ -84,14 +93,12 @@ export default function Feature() {
       let bottleneckedPoints = 0;
       hasBottleneckedThisPass = false;
 
-      // Check Core Stats for bottlenecking (Attunements are immune to this cap)
       for (let i of affectedCore) {
         if (!bottleneckedCore.has(i)) {
           const drop = originalCore[i] - internalCore[i];
 
           if (drop > MAXIMUM_REDUCTION) {
             internalCore[i] = originalCore[i] - MAXIMUM_REDUCTION;
-
             bottleneckedPoints += internalCore[i] - previousCore[i];
             bottleneckedCore.add(i);
             bottleneckedDivideBy--;
@@ -140,7 +147,6 @@ export default function Feature() {
     setAttunValues(internalAttun);
   };
 
-
   const handleReset = () => {
     setCoreValues(Array(9).fill(''));
     setAttunValues(Array(7).fill(''));
@@ -152,8 +158,11 @@ export default function Feature() {
     <div className="feature-wrapper">
       <div className="feature-side-grid">
         <div className="feature-part-card">
+          <h3 className="part-title">Extra Build Facts</h3>
           <div className="vertical-rows-container">
-            {/* blank rn */}
+            <p className="build-indicators">Shrine of Blasphemy = T/F</p>
+            <p className="build-indicators">Shrine of Mastery = T/F</p>
+            <p className="build-indicators">Unobtainable = T/F indicator</p>
           </div>
         </div>
 
@@ -172,7 +181,7 @@ export default function Feature() {
                   value={coreValues[index + 6]}
                   onChange={(e) => handleStatChange('A', index + 6, e.target.value)}
                 />
-                <div className="buildindicator"></div>
+                <div className="stat-indicator"></div>
               </div>
             ))}
           </div>
@@ -227,7 +236,7 @@ export default function Feature() {
         <h3 className="part-title">SHRINES & BUTTONS</h3>
         <p className="feature-label-text">Points Remaining: {pointsRemaining}</p>
         <button className="soo" onClick={handleSOO}>Shrine of Order</button>
-        <button className="som">Shrine of Mastery</button>
+        <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
         <button className="reset" onClick={handleReset}>Reset</button>
         <button className="submit">Submit</button>
       </div> {/* shrine, submit, extra buttons*/}

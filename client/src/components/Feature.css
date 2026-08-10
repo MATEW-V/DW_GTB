@@ -40,6 +40,7 @@
   border-color: #232323;
   border-radius: 4px;
 }
+
 .part-title {
   margin: 0 0 16px 0;
   font-size: 18px;
@@ -49,6 +50,11 @@
   text-transform: uppercase;
 }
 
+.build-indicators {
+  font-size: 14px;
+  font-weight: 700;
+  color: #232323;
+}
 /* Vertical stack container holding the 6 inner lines */
 .vertical-rows-container {
   display: flex;
@@ -71,7 +77,7 @@
 .feature-row-line:last-child {
   border-bottom: none;
 }
-.buildindicator {
+.stat-indicator {
   display: block;
   width: 24px;
   height: 24px; 
