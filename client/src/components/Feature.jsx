@@ -4,11 +4,10 @@ import './Feature.css';
 export default function Feature() {
   const [coreValues, setCoreValues] = useState(Array(9).fill(''));
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
-  const [preCoreValues, setPreCoreValues] = useState(Array(9).fill('0'));
-  const [preAttunValues, setPreAttunValues] = useState(Array(7).fill('0'));
+  const [preCoreValues, setPreCoreValues] = useState(Array(9).fill(''));
+  const [preAttunValues, setPreAttunValues] = useState(Array(7).fill(''));
 
-
-  const coreLabels = ["Strength", "Agility", "Fortitude", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
+  const coreLabels = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
   const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
 
   const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
@@ -45,13 +44,41 @@ export default function Feature() {
   const handleSOO = () => {
     setPreCoreValues([...coreValues]);
     setPreAttunValues([...attunValues]);
+    let internalCore = [...preCoreValues];
+    let internalAttun = [...preAttunValues];
+    console.log("shrined");
+
+    let statNum = 0;
+    let totalShrine = 0;
+    let bottleneck = false;
+
+    for (let i = 0; i < 9; i++) {
+      if (coreValues[i] >= 1) {
+        statNum += 1;
+        totalShrine += Number(coreValues[i]);
+      }
+      if (attunValues[i] >= 1) {
+        statNum += 1;
+        totalShrine += Number(attunValues[i]);
+      }
+    }
+    for (let i = 0; i < 9; i++) {
+      if (coreValues[i] >= 1) {
+        internalCore[i] = totalShrine / statNum;
+      }
+      if (attunValues[i] >= 1) {
+        internalAttun[i] = totalShrine / statNum;
+      }
+    }
+    console.log(internalCore);
+    console.log(internalAttun);
   }
 
   const handleReset = () => {
     setCoreValues(Array(9).fill(''));
     setAttunValues(Array(7).fill(''));
-    setPreCoreValues(Array(9).fill('0'));
-    setPreAttunValues(Array(7).fill('0'));
+    setPreCoreValues(Array(9).fill(''));
+    setPreAttunValues(Array(7).fill(''));
   };
 
   return (
@@ -70,7 +97,7 @@ export default function Feature() {
             {coreLabels.slice(6, 9).map((coreLabels, index) => (
               <div key={`partA-${index + 6}`} className="feature-row-line">
                 <span className="feature-label-text">{coreLabels}:</span>
-                <p className="preshrine">{preCoreValues[index+6]}</p>
+                <p className="preshrine">{preCoreValues[index + 6]}</p>
                 <input
                   type="text"
                   className="feature-input-box"
