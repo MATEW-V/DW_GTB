@@ -22,13 +22,13 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   width: auto;
-  width: 1200px;
+  width: 1600px;
 }
 .clipbox {
   display: block;
-  width: 600px;
-  height: 824px; 
+  width: 900px;
+  height: 844px; 
   margin-right: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: #ffffff; 
 }

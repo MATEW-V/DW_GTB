@@ -20,7 +20,7 @@ export default function Feature() {
       let num = Number(cleanValue);
       const targetArray = part === 'A' ? coreValues : attunValues; //A=core/weap, B=attunement
 
-      //point tracking for 330 total
+      // point tracking for 330 total
       const currentVal = Number(targetArray[index] || 0);
       const totalUsedByOthers = totalPointUsed - currentVal;
       const maxAllowedForThisField = 330 - totalUsedByOthers;
@@ -51,6 +51,16 @@ export default function Feature() {
       setPreAttunValues(Array(7).fill(''));
     }
   }
+
+  const handleReset = () => {
+    setCoreValues(Array(9).fill(''));
+    setAttunValues(Array(7).fill(''));
+    setPreCoreValues(Array(9).fill(''));
+    setPreAttunValues(Array(7).fill(''));
+  };
+
+  const [isBlasphemy, setIsBlasphemy] = useState(false);
+  const [isMastery, setIsMastery] = useState(false);
 
   const handleSOO = () => { //ty cyfer for algo
     setPreCoreValues([...coreValues]);
@@ -110,7 +120,6 @@ export default function Feature() {
 
       if (bottleneckedPoints !== 0 && bottleneckedDivideBy > 0) {
         const reductionChunk = bottleneckedPoints / bottleneckedDivideBy;
-
         for (let i of affectedCore) {
           if (!bottleneckedCore.has(i)) {
             internalCore[i] -= reductionChunk;
@@ -124,10 +133,8 @@ export default function Feature() {
           internalAttun[i] -= reductionChunk;
         }
       }
-
       previousCore = [...internalCore];
       previousAttun = [...internalAttun];
-
     } while (hasBottleneckedThisPass);
 
     affectedCore.forEach((i) => (internalCore[i] = Math.floor(internalCore[i])));
@@ -149,25 +156,30 @@ export default function Feature() {
     setAttunValues(internalAttun);
   };
 
-  const handleReset = () => {
-    setCoreValues(Array(9).fill(''));
-    setAttunValues(Array(7).fill(''));
-    setPreCoreValues(Array(9).fill(''));
-    setPreAttunValues(Array(7).fill(''));
-  };
-
   return (
     <div className="feature-wrapper">
       <div className="feature-side-grid">
         <div className="feature-part-card">
           <h3 className="part-title">Extra Build Facts</h3>
           <div className="vertical-rows-container">
-            <p className="build-indicators">Shrine of Blasphemy = T/F</p>
-            <p className="build-indicators">Shrine of Mastery = T/F</p>
-            <p className="build-indicators">Unobtainable = T/F indicator</p>
+            <p className="build-indicators">
+              Shrine of Blasphemy = <button 
+              className="truefalse" 
+              onClick={() => setIsBlasphemy(!isBlasphemy)}
+              style={{ color: isBlasphemy ? 'green' : 'red'}}
+              >[{isBlasphemy ? 'TRUE' : 'FALSE'}]
+              </button>
+              </p>
+            <p className="build-indicators">Shrine of Mastery = <button 
+              className="truefalse" 
+              onClick={() => setIsMastery(!isMastery)}
+              style={{ color: isMastery ? 'green' : 'red'}}
+              >[{isMastery ? 'TRUE' : 'FALSE'}]
+              </button>
+              </p>
+            <p className="build-indicators">Unobtainable = [placeholder]</p>
           </div>
         </div>
-
 
         <div className="feature-part-card">{/* weapon */}
           <h3 className="part-title">Weapon</h3>
