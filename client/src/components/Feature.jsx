@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import data from '/src/assets/buildbank.json'
+import data from '/src/assets/buildbank.json';
 import './Feature.css';
+
+const CORE_LABELS = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
+const ATTUN_LABELS = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
+
+// ID FOR JSON BUILD OF THE DAY
+const TARGET_PRESET_ID = 0;
 
 export default function Feature() {
   const [coreValues, setCoreValues] = useState(Array(9).fill(''));
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
-  const [preCoreValues, setPreCoreValues] = useState(Array(9).fill(''));
-  const [preAttunValues, setPreAttunValues] = useState(Array(7).fill(''));
+  const [preCoreValues, setPreCoreValues] = useState(Array(9).fill('0'));
+  const [preAttunValues, setPreAttunValues] = useState(Array(7).fill('0'));
 
   const [coreIndicators, setCoreIndicators] = useState(Array(9).fill('grey'));
   const [attunIndicators, setAttunIndicators] = useState(Array(7).fill('grey'));
@@ -14,20 +20,22 @@ export default function Feature() {
   const [preCoreIndicators, setPreCoreIndicators] = useState(Array(9).fill('grey'));
   const [preAttunIndicators, setPreAttunIndicators] = useState(Array(7).fill('grey'));
 
-  const coreLabels = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
-  const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
+  const [isBlasphemy, setIsBlasphemy] = useState(false);
+  const [isMastery, setIsMastery] = useState(false);
 
-  const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
+  // Total point usage tracking
+  const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) +
+    attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
 
   const pointsRemaining = 330 - totalPointUsed;
 
   const handleStatChange = (part, index, value) => {
-    let cleanValue = value.replace(/[^0-9]/g, ''); //striptodigit
+    let cleanValue = value.replace(/[^0-9]/g, ''); // Strip non-digit chars
     if (cleanValue !== '') {
       let num = Number(cleanValue);
-      const targetArray = part === 'A' ? coreValues : attunValues; //A=core/weap, B=attunement
+      const targetArray = part === 'A' ? coreValues : attunValues;
 
-      // point tracking for 330 total
+      // Point tracking for 330 total max
       const currentVal = Number(targetArray[index] || 0);
       const totalUsedByOthers = totalPointUsed - currentVal;
       const maxAllowedForThisField = 330 - totalUsedByOthers;
@@ -35,7 +43,7 @@ export default function Feature() {
         num = maxAllowedForThisField;
       }
 
-      // stat lims
+      // Individual stat limits
       if (num > 100) num = 100;
       if (num < 0) num = 0;
       cleanValue = String(num);
@@ -57,6 +65,13 @@ export default function Feature() {
       setAttunValues(preAttunValues);
       setPreAttunValues(Array(7).fill(''));
     }
+  };
+
+  const handleClear = () => {
+    setCoreValues(Array(9).fill(''));
+    setAttunValues(Array(7).fill(''));
+    setPreCoreValues(Array(9).fill(''));
+    setPreAttunValues(Array(7).fill(''));
   }
 
   const handleReset = () => {
@@ -70,72 +85,59 @@ export default function Feature() {
     setPreAttunIndicators(Array(7).fill('grey'));
   };
 
-  const [isBlasphemy, setIsBlasphemy] = useState(false);
-  const [isMastery, setIsMastery] = useState(false);
-
-  // Helper to get color based on stat difference
   const getIndicatorColor = (inputVal, targetVal) => {
     const diff = Math.abs(Number(inputVal || 0) - Number(targetVal || 0));
-    if (diff === 0) return 'green';
-    if (diff <= 15) return 'yellow';
-    return 'grey';
+    if (diff === 0) return '#008b33';
+    if (diff <= 15) return '#faca3b';
+    return '#777777';
+  };
+
+  const getTooltipText = (color) => {
+    if (color === '#008b33') return 'correct';
+    if (color === '#faca3b') return 'within 15 points';
+    return 'no match';
   };
 
   const handleSubmit = () => {
     if (!data || data.length === 0) return;
-
-    let bestMatch = null;
-    let lowestDiffSum = Infinity;
-
-    data.forEach((entry) => {
-      if (entry.sob !== isBlasphemy || entry.som !== isMastery) return;
-
-      let currentDiffSum = 0;
-
-      // Calculate postshrine diffs
-      coreValues.forEach((val, i) => {
-        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.postshrine.corevalues[i] || 0));
-      });
-      attunValues.forEach((val, i) => {
-        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.postshrine.attunvalues[i] || 0));
-      });
-
-      // Calculate preshrine diffs
-      preCoreValues.forEach((val, i) => {
-        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.preshrine.corevalues[i] || 0));
-      });
-      preAttunValues.forEach((val, i) => {
-        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.preshrine.attunvalues[i] || 0));
-      });
-
-      if (currentDiffSum < lowestDiffSum) {
-        lowestDiffSum = currentDiffSum;
-        bestMatch = entry;
-      }
-    });
-
-    if (bestMatch) {
-      // Update postshrine indicators
-      setCoreIndicators(coreValues.map((val, i) => getIndicatorColor(val, bestMatch.postshrine.corevalues[i])));
-      setAttunIndicators(attunValues.map((val, i) => getIndicatorColor(val, bestMatch.postshrine.attunvalues[i])));
-
-      // UPDATE PRESHRINE INDICATORS:
-      setPreCoreIndicators(preCoreValues.map((val, i) => getIndicatorColor(val, bestMatch.preshrine.corevalues[i])));
-      setPreAttunIndicators(preAttunValues.map((val, i) => getIndicatorColor(val, bestMatch.preshrine.attunvalues[i])));
-
-      if (lowestDiffSum === 0) {
-        alert(`Exact Match found! User: ${bestMatch.user}`);
-      } else {
-        alert(`Closest match found (User: ${bestMatch.user}). Indicators updated!`);
-      }
+    if (pointsRemaining > 0) {
+      alert("must invest all stats");
+      return;
     } else {
-      alert("No matching builds found for the selected shrine toggles.");
+      // Direct lookup by ID/Index
+      const targetEntry = data[TARGET_PRESET_ID];
+
+      const numCore = coreValues.map(v => Number(v || 0));
+      const numAttun = attunValues.map(v => Number(v || 0));
+      const numPreCore = preCoreValues.map(v => Number(v || 0));
+      const numPreAttun = preAttunValues.map(v => Number(v || 0));
+
+      let totalDiffSum = 0;
+
+      numCore.forEach((val, i) => {
+        totalDiffSum += Math.abs(val - Number(targetEntry.postshrine.corevalues[i] || 0));
+      });
+      numAttun.forEach((val, i) => {
+        totalDiffSum += Math.abs(val - Number(targetEntry.postshrine.attunvalues[i] || 0));
+      });
+      numPreCore.forEach((val, i) => {
+        totalDiffSum += Math.abs(val - Number(targetEntry.preshrine.corevalues[i] || 0));
+      });
+      numPreAttun.forEach((val, i) => {
+        totalDiffSum += Math.abs(val - Number(targetEntry.preshrine.attunvalues[i] || 0));
+      });
+
+      setCoreIndicators(numCore.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.corevalues[i])));
+      setAttunIndicators(numAttun.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.attunvalues[i])));
+
+      setPreCoreIndicators(numPreCore.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.corevalues[i])));
+      setPreAttunIndicators(numPreAttun.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.attunvalues[i])));
     }
   };
 
-  const handleSOO = () => { //ty cyfer for algo
-    setPreCoreValues([...coreValues]);
-    setPreAttunValues([...attunValues]);
+  const handleSOO = () => {
+    setPreCoreValues(coreValues.map(val => (val === '' ? '0' : val)));
+    setPreAttunValues(attunValues.map(val => (val === '' ? '0' : val)));
 
     let internalCore = [...coreValues].map(Number);
     let internalAttun = [...attunValues].map(Number);
@@ -151,6 +153,8 @@ export default function Feature() {
         affectedCore.push(i);
         totalShrine += originalCore[i];
       }
+    }
+    for (let i = 0; i < 7; i++) {
       if (originalAttun[i] > 0) {
         affectedAttun.push(i);
         totalShrine += originalAttun[i];
@@ -194,7 +198,6 @@ export default function Feature() {
         for (let i of affectedCore) {
           if (!bottleneckedCore.has(i)) {
             internalCore[i] -= reductionChunk;
-            // Verify if this new subtraction pushed this core stat past its 25 limit
             if (originalCore[i] - internalCore[i] > MAXIMUM_REDUCTION) {
               hasBottleneckedThisPass = true;
             }
@@ -231,7 +234,7 @@ export default function Feature() {
     <div className="feature-wrapper">
       <div className="feature-side-grid">
         <div className="feature-part-card">
-          <h3 className="part-title">Extra Build Facts</h3>
+          <h3 className="part-title">Extra</h3>
           <div className="vertical-rows-container">
             <p className="build-indicators">
               Shrine of Blasphemy = <button
@@ -252,35 +255,44 @@ export default function Feature() {
           </div>
         </div>
 
-        <div className="feature-part-card">{/* weapon */}
+        {/* Weapon Section (Core indices 6 through 8) */}
+        <div className="feature-part-card">
           <h3 className="part-title">Weapon</h3>
           <div className="vertical-rows-container">
-            {coreLabels.slice(6, 9).map((coreLabels, index) => (
-              <div key={`partA-${index + 6}`} className="feature-row-line">
-                <span className="feature-label-text">{coreLabels}:</span>
-                <p className="preshrine">{preCoreValues[index + 6]}</p>
-                <input
-                  type="text"
-                  className="feature-input-box"
-                  placeholder="0"
-                  value={coreValues[index + 6]}
-                  onChange={(e) => handleStatChange('A', index + 6, e.target.value)}
-                />
-                <div className="pre-stat-indicator" style={{ backgroundColor: preCoreIndicators[index + 6] }}></div>
-                <div className="stat-indicator" style={{ backgroundColor: coreIndicators[index + 6] }}></div>
-              </div>
-            ))}
+            {CORE_LABELS.slice(6, 9).map((label, index) => {
+              const actualIdx = index + 6;
+              return (
+                <div key={`partA-${actualIdx}`} className="feature-row-line">
+                  <span className="feature-label-text">{label}:</span>
+                  <p className="preshrine">{preCoreValues[actualIdx]}</p>
+                  <input
+                    type="text"
+                    className="feature-input-box"
+                    placeholder="0"
+                    value={coreValues[actualIdx]}
+                    onChange={(e) => handleStatChange('A', actualIdx, e.target.value)}
+                  />
+                  <div className="pre-stat-indicator"
+                    style={{ backgroundColor: preCoreIndicators[actualIdx] }}
+                    data-tooltip={getTooltipText(preCoreIndicators[actualIdx])}></div>
+                  <div className="stat-indicator"
+                    style={{ backgroundColor: coreIndicators[actualIdx] }}
+                    data-tooltip={getTooltipText(coreIndicators[actualIdx])}></div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
       <div className="feature-side-grid">
-        <div className="feature-part-card">{/* Core stats */}
+        {/* Core Stats Section (Core indices 0 through 5) */}
+        <div className="feature-part-card">
           <h3 className="part-title">Core Stats</h3>
           <div className="vertical-rows-container">
-            {coreLabels.slice(0, 6).map((coreLabels, index) => (
+            {CORE_LABELS.slice(0, 6).map((label, index) => (
               <div key={`partA-${index}`} className="feature-row-line">
-                <span className="feature-label-text">{coreLabels}:</span>
+                <span className="feature-label-text">{label}:</span>
                 <p className="preshrine">{preCoreValues[index]}</p>
                 <input
                   type="text"
@@ -289,19 +301,24 @@ export default function Feature() {
                   value={coreValues[index]}
                   onChange={(e) => handleStatChange('A', index, e.target.value)}
                 />
-                <div className="pre-stat-indicator" style={{ backgroundColor: preCoreIndicators[index] }}></div>
-                <div className="stat-indicator" style={{ backgroundColor: coreIndicators[index] }}></div>
+                <div className="pre-stat-indicator"
+                  style={{ backgroundColor: preCoreIndicators[index] }}
+                  data-tooltip={getTooltipText(preCoreIndicators[index])}></div>
+                <div className="stat-indicator"
+                  style={{ backgroundColor: coreIndicators[index] }}
+                  data-tooltip={getTooltipText(coreIndicators[index])}></div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="feature-part-card">{/* Attunement stats*/}
+        {/* Attunement Section */}
+        <div className="feature-part-card">
           <h3 className="part-title">Attunements</h3>
           <div className="vertical-rows-container">
-            {attunmentLabels.map((attunmentLabels, index) => (
+            {ATTUN_LABELS.map((label, index) => (
               <div key={`partB-${index}`} className="feature-row-line">
-                <span className="feature-label-text">{attunmentLabels}:</span>
+                <span className="feature-label-text">{label}:</span>
                 <p className="preshrine">{preAttunValues[index]}</p>
                 <input
                   type="text"
@@ -310,22 +327,27 @@ export default function Feature() {
                   value={attunValues[index]}
                   onChange={(e) => handleStatChange('B', index, e.target.value)}
                 />
-                <div className="pre-stat-indicator" style={{ backgroundColor: preAttunIndicators[index] }}></div>
-                <div className="stat-indicator" style={{ backgroundColor: attunIndicators[index] }}></div>
+                <div className="pre-stat-indicator"
+                  style={{ backgroundColor: preAttunIndicators[index] }}
+                  data-tooltip={getTooltipText(preAttunIndicators[index])}></div>
+                <div className="stat-indicator"
+                  style={{ backgroundColor: attunIndicators[index] }}
+                  data-tooltip={getTooltipText(attunIndicators[index])}></div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* shrine, submit, extra buttons*/}
+      {/* Control Buttons */}
       <div className="feature-buttons">
-        <h3 className="part-title">SHRINES & BUTTONS</h3>
+        <h3 className="part-title">SHRINE & BUTTONS</h3>
         <p className="feature-label-text">Points Remaining: {pointsRemaining}</p>
         <button className="soo" onClick={handleSOO}>Shrine of Order</button>
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
-        <button className="reset" onClick={handleReset}>Reset</button>
-        <button className="submit" onClick={handleSubmit}>Submit</button>
+        <button className="soo" onClick={handleClear}>Clear Stats</button>
+        <button className="reset" onClick={handleReset}>RESET</button>
+        <button className="submit" onClick={handleSubmit}>SUBMIT</button>
       </div>
     </div>
   );
