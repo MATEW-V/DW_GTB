@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import data from '/src/assets/buildbank.json'
 import './Feature.css';
 
 export default function Feature() {
@@ -6,6 +7,12 @@ export default function Feature() {
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
   const [preCoreValues, setPreCoreValues] = useState(Array(9).fill(''));
   const [preAttunValues, setPreAttunValues] = useState(Array(7).fill(''));
+
+  const [coreIndicators, setCoreIndicators] = useState(Array(9).fill('grey'));
+  const [attunIndicators, setAttunIndicators] = useState(Array(7).fill('grey'));
+
+  const [preCoreIndicators, setPreCoreIndicators] = useState(Array(9).fill('grey'));
+  const [preAttunIndicators, setPreAttunIndicators] = useState(Array(7).fill('grey'));
 
   const coreLabels = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
   const attunmentLabels = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
@@ -57,10 +64,74 @@ export default function Feature() {
     setAttunValues(Array(7).fill(''));
     setPreCoreValues(Array(9).fill(''));
     setPreAttunValues(Array(7).fill(''));
+    setCoreIndicators(Array(9).fill('grey'));
+    setAttunIndicators(Array(7).fill('grey'));
+    setPreCoreIndicators(Array(9).fill('grey'));
+    setPreAttunIndicators(Array(7).fill('grey'));
   };
 
   const [isBlasphemy, setIsBlasphemy] = useState(false);
   const [isMastery, setIsMastery] = useState(false);
+
+  // Helper to get color based on stat difference
+  const getIndicatorColor = (inputVal, targetVal) => {
+    const diff = Math.abs(Number(inputVal || 0) - Number(targetVal || 0));
+    if (diff === 0) return 'green';
+    if (diff <= 15) return 'yellow';
+    return 'grey';
+  };
+
+  const handleSubmit = () => {
+    if (!data || data.length === 0) return;
+
+    let bestMatch = null;
+    let lowestDiffSum = Infinity;
+
+    data.forEach((entry) => {
+      if (entry.sob !== isBlasphemy || entry.som !== isMastery) return;
+
+      let currentDiffSum = 0;
+
+      // Calculate postshrine diffs
+      coreValues.forEach((val, i) => {
+        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.postshrine.corevalues[i] || 0));
+      });
+      attunValues.forEach((val, i) => {
+        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.postshrine.attunvalues[i] || 0));
+      });
+
+      // Calculate preshrine diffs
+      preCoreValues.forEach((val, i) => {
+        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.preshrine.corevalues[i] || 0));
+      });
+      preAttunValues.forEach((val, i) => {
+        currentDiffSum += Math.abs(Number(val || 0) - Number(entry.preshrine.attunvalues[i] || 0));
+      });
+
+      if (currentDiffSum < lowestDiffSum) {
+        lowestDiffSum = currentDiffSum;
+        bestMatch = entry;
+      }
+    });
+
+    if (bestMatch) {
+      // Update postshrine indicators
+      setCoreIndicators(coreValues.map((val, i) => getIndicatorColor(val, bestMatch.postshrine.corevalues[i])));
+      setAttunIndicators(attunValues.map((val, i) => getIndicatorColor(val, bestMatch.postshrine.attunvalues[i])));
+
+      // UPDATE PRESHRINE INDICATORS:
+      setPreCoreIndicators(preCoreValues.map((val, i) => getIndicatorColor(val, bestMatch.preshrine.corevalues[i])));
+      setPreAttunIndicators(preAttunValues.map((val, i) => getIndicatorColor(val, bestMatch.preshrine.attunvalues[i])));
+
+      if (lowestDiffSum === 0) {
+        alert(`Exact Match found! User: ${bestMatch.user}`);
+      } else {
+        alert(`Closest match found (User: ${bestMatch.user}). Indicators updated!`);
+      }
+    } else {
+      alert("No matching builds found for the selected shrine toggles.");
+    }
+  };
 
   const handleSOO = () => { //ty cyfer for algo
     setPreCoreValues([...coreValues]);
@@ -163,20 +234,20 @@ export default function Feature() {
           <h3 className="part-title">Extra Build Facts</h3>
           <div className="vertical-rows-container">
             <p className="build-indicators">
-              Shrine of Blasphemy = <button 
-              className="truefalse" 
-              onClick={() => setIsBlasphemy(!isBlasphemy)}
-              style={{ color: isBlasphemy ? 'green' : 'red'}}
+              Shrine of Blasphemy = <button
+                className="truefalse"
+                onClick={() => setIsBlasphemy(!isBlasphemy)}
+                style={{ color: isBlasphemy ? 'green' : 'red' }}
               >[{isBlasphemy ? 'TRUE' : 'FALSE'}]
               </button>
-              </p>
-            <p className="build-indicators">Shrine of Mastery = <button 
-              className="truefalse" 
+            </p>
+            <p className="build-indicators">Shrine of Mastery = <button
+              className="truefalse"
               onClick={() => setIsMastery(!isMastery)}
-              style={{ color: isMastery ? 'green' : 'red'}}
-              >[{isMastery ? 'TRUE' : 'FALSE'}]
-              </button>
-              </p>
+              style={{ color: isMastery ? 'green' : 'red' }}
+            >[{isMastery ? 'TRUE' : 'FALSE'}]
+            </button>
+            </p>
             <p className="build-indicators">Unobtainable = [placeholder]</p>
           </div>
         </div>
@@ -195,7 +266,8 @@ export default function Feature() {
                   value={coreValues[index + 6]}
                   onChange={(e) => handleStatChange('A', index + 6, e.target.value)}
                 />
-                <div className="stat-indicator"></div>
+                <div className="pre-stat-indicator" style={{ backgroundColor: preCoreIndicators[index + 6] }}></div>
+                <div className="stat-indicator" style={{ backgroundColor: coreIndicators[index + 6] }}></div>
               </div>
             ))}
           </div>
@@ -217,7 +289,8 @@ export default function Feature() {
                   value={coreValues[index]}
                   onChange={(e) => handleStatChange('A', index, e.target.value)}
                 />
-                <div className="stat-indicator"></div>
+                <div className="pre-stat-indicator" style={{ backgroundColor: preCoreIndicators[index] }}></div>
+                <div className="stat-indicator" style={{ backgroundColor: coreIndicators[index] }}></div>
               </div>
             ))}
           </div>
@@ -237,7 +310,8 @@ export default function Feature() {
                   value={attunValues[index]}
                   onChange={(e) => handleStatChange('B', index, e.target.value)}
                 />
-                <div className="stat-indicator"></div>
+                <div className="pre-stat-indicator" style={{ backgroundColor: preAttunIndicators[index] }}></div>
+                <div className="stat-indicator" style={{ backgroundColor: attunIndicators[index] }}></div>
               </div>
             ))}
           </div>
@@ -251,7 +325,7 @@ export default function Feature() {
         <button className="soo" onClick={handleSOO}>Shrine of Order</button>
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
         <button className="reset" onClick={handleReset}>Reset</button>
-        <button className="submit">Submit</button>
+        <button className="submit" onClick={handleSubmit}>Submit</button>
       </div>
     </div>
   );

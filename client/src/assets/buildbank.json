@@ -1,0 +1,34 @@
+[
+  {
+    "id":0,
+    "user": "1mat_ew",
+    "yt": "https://youtube.com",
+    "unob": false,
+    "som": false,
+    "sob": false,
+    "preshrine": { 
+      "corevalues": ["1", "1", "1", "55", "90", "0", "1", "0", "0"],
+      "attunvalues": ["40", "0", "0", "0", "0", "0", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["40", "50", "25", "30", "65", "0", "100", "0", "0"],
+      "attunvalues": ["20", "0", "0", "0", "0", "0", "0"]
+    }
+  },
+  {
+    "id":1,
+    "user": "noobscootery",
+    "yt": "https://youtube.com",
+    "unob": false,
+    "som": false,
+    "sob": false,
+    "preshrine": { 
+      "corevalues": ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
+      "attunvalues": ["0", "0", "0", "0", "0", "0", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
+      "attunvalues": ["0", "0", "0", "0", "0", "0", "0"]
+    }
+  }
+]
