@@ -24,8 +24,7 @@ export default function Feature() {
   const [isMastery, setIsMastery] = useState(false);
 
   // Total point usage tracking
-  const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) +
-    attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
+  const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
 
   const pointsRemaining = 330 - totalPointUsed;
 
@@ -42,7 +41,6 @@ export default function Feature() {
       if (num > maxAllowedForThisField) {
         num = maxAllowedForThisField;
       }
-
       // Individual stat limits
       if (num > 100) num = 100;
       if (num < 0) num = 0;
