@@ -23,7 +23,10 @@ export default function Feature() {
   const [isBlasphemy, setIsBlasphemy] = useState(false);
   const [isMastery, setIsMastery] = useState(false);
 
-  // Total point usage tracking
+  // submit attempt counter state
+  const [submitAttemptsLeft, setSubmitAttemptsLeft] = useState(3);
+
+  // total point usage tracking
   const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
   const pointsRemaining = 330 - totalPointUsed;
 
@@ -106,6 +109,7 @@ export default function Feature() {
   };
 
   const handleSubmit = () => {
+    if (submitAttemptsLeft <= 0) return;
     if (!data || data.length === 0) return;
     if (pointsRemaining > 0) {
       alert("must invest all stats");
@@ -139,6 +143,9 @@ export default function Feature() {
 
       setPreCoreIndicators(numPreCore.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.corevalues[i])));
       setPreAttunIndicators(numPreAttun.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.attunvalues[i])));
+
+      // Decrement remaining submit uses
+      setSubmitAttemptsLeft(prev => prev - 1);
     }
   };
 
@@ -245,15 +252,15 @@ export default function Feature() {
           <div className="vertical-rows-container">
             <div className="build-indicators">
               <span className="title">Shrine of Blasphemy</span>
-              <div className="tf">=  {sob}</div>
+              <div className="tf">= {"\u00A0\u00A0\u00A0\u00A0"}{sob}</div>
             </div>
             <div className="build-indicators">
               <span className="title">Shrine of Mastery</span>
-              <div className="tf">=  {som}</div>
+              <div className="tf">= {"\u00A0\u00A0\u00A0\u00A0"}{som}</div>
             </div>
            <div className="build-indicators">
               <span className="title">Unobtainable</span>
-              <div className="tf">=  {unob}</div>
+              <div className="tf">= {"\u00A0\u00A0\u00A0\u00A0"}{unob}</div>
             </div>
           </div>
         </div>
@@ -350,7 +357,13 @@ export default function Feature() {
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
         <button className="soo" onClick={handleClear}>Clear Stats</button>
         <button className="reset" onClick={handleReset}>RESET</button>
-        <button className="submit" onClick={handleSubmit}>SUBMIT</button>
+        <button 
+          className="submit" 
+          onClick={handleSubmit} 
+          disabled={submitAttemptsLeft <= 0}
+        >
+          SUBMIT ({submitAttemptsLeft}/3)
+        </button>
       </div>
     </div>
   );
