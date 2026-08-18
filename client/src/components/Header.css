@@ -27,24 +27,22 @@
   text-align: center;
 }
 
-/* 3-Line Hamburger Button Styling */
+/* Updated Menu Button & Icon Styling */
 .menu-btn {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 24px;
-  height: 18px;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0;
+  padding: 4px;
 }
 
-.menu-line {
-  width: 100%;
-  height: 2px;
-  background-color: #ffffff;
-  border-radius: 2px;
+.menu-icon-img {
+  width: 28px;         /* Adjust width as needed */
+  height: 28px;        /* Adjust height as needed */
+  object-fit: contain;  /* Prevents image distortion */
+  display: block;
 }
 
 /* Right Side Button Styling */
@@ -66,7 +64,7 @@
 .tutorial-btn:hover {
   background-color: #f8fafc;
   border-color: #94a3b8;
-  color: #232323
+  color: #232323;
 }
 
 .login-btn {

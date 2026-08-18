@@ -1,11 +1,11 @@
 [
   {
-    "id":0,
     "user": "1mat_ew",
-    "yt": "https://youtube.com",
-    "unob": false,
-    "som": false,
-    "sob": false,
+    "yt": "https://www.youtube.com/embed/TzsKJAGuHMo",
+    "date": "08/16/2026",
+    "unob": "FALSE",
+    "som": "FALSE",
+    "sob": "FALSE",
     "preshrine": { 
       "corevalues": ["1", "1", "1", "55", "90", "0", "1", "0", "0"],
       "attunvalues": ["40", "0", "0", "0", "0", "0", "0"]
@@ -16,12 +16,12 @@
     }
   },
   {
-    "id":1,
     "user": "noobscootery",
-    "yt": "https://youtube.com",
-    "unob": false,
-    "som": false,
-    "sob": false,
+    "yt": "https://www.youtube.com/embed/",
+    "date": "08/16/2026",
+    "unob": "FALSE",
+    "som": "FALSE",
+    "sob": "FALSE",
     "preshrine": { 
       "corevalues": ["0", "0", "0", "0", "0", "0", "0", "0", "0"],
       "attunvalues": ["0", "0", "0", "0", "0", "0", "0"]

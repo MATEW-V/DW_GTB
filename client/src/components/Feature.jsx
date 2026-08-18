@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import data from '/src/assets/buildbank.json';
+import React, { useMemo, useState } from 'react';
+import data from '../assets/buildbank.json';
 import './Feature.css';
 
 const CORE_LABELS = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
@@ -25,8 +25,17 @@ export default function Feature() {
 
   // Total point usage tracking
   const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
-
   const pointsRemaining = 330 - totalPointUsed;
+
+  // lookup function 'const videoUrl = targetBuild?.yt || '';' format
+  const targetBuild = useMemo(() => {
+    if (!Array.isArray(data) || !data[TARGET_PRESET_ID]) return null;
+    return data[TARGET_PRESET_ID];
+  }, []);
+
+  const som = targetBuild?.som || '';
+  const sob = targetBuild?.sob || '';
+  const unob = targetBuild?.unob || '';
 
   const handleStatChange = (part, index, value) => {
     let cleanValue = value.replace(/[^0-9]/g, ''); // Strip non-digit chars
@@ -234,22 +243,18 @@ export default function Feature() {
         <div className="feature-part-card">
           <h3 className="part-title">Extra</h3>
           <div className="vertical-rows-container">
-            <p className="build-indicators">
-              Shrine of Blasphemy = <button
-                className="truefalse"
-                onClick={() => setIsBlasphemy(!isBlasphemy)}
-                style={{ color: isBlasphemy ? 'green' : 'red' }}
-              >[{isBlasphemy ? 'TRUE' : 'FALSE'}]
-              </button>
-            </p>
-            <p className="build-indicators">Shrine of Mastery = <button
-              className="truefalse"
-              onClick={() => setIsMastery(!isMastery)}
-              style={{ color: isMastery ? 'green' : 'red' }}
-            >[{isMastery ? 'TRUE' : 'FALSE'}]
-            </button>
-            </p>
-            <p className="build-indicators">Unobtainable = [placeholder]</p>
+            <div className="build-indicators">
+              <span className="title">Shrine of Blasphemy</span>
+              <div className="tf">=  {sob}</div>
+            </div>
+            <div className="build-indicators">
+              <span className="title">Shrine of Mastery</span>
+              <div className="tf">=  {som}</div>
+            </div>
+           <div className="build-indicators">
+              <span className="title">Unobtainable</span>
+              <div className="tf">=  {unob}</div>
+            </div>
           </div>
         </div>
 

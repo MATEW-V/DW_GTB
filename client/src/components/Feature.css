@@ -54,9 +54,24 @@
 
 .build-indicators {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
+.build-indicators .title {
+  white-space: nowrap;
+}
+
+.build-indicators .tf {
+  margin-left: auto;   
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;  
+}
 .feature-label-text {
   font-size: 18px;
   font-weight: 600;
