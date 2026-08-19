@@ -76,7 +76,7 @@ export default function Feature() {
       setPreAttunValues(Array(7).fill(''));
     }
   };
-
+  //stat clear
   const handleClear = () => {
     setCoreValues(Array(9).fill(''));
     setAttunValues(Array(7).fill(''));
@@ -84,6 +84,7 @@ export default function Feature() {
     setPreAttunValues(Array(7).fill(''));
   }
 
+  //reset page
   const handleReset = () => {
     setCoreValues(Array(9).fill(''));
     setAttunValues(Array(7).fill(''));
@@ -95,13 +96,13 @@ export default function Feature() {
     setPreAttunIndicators(Array(7).fill('grey'));
   };
 
+  //wordle indicators
   const getIndicatorColor = (inputVal, targetVal) => {
     const diff = Math.abs(Number(inputVal || 0) - Number(targetVal || 0));
     if (diff === 0) return '#008b33';
     if (diff <= 15) return '#faca3b';
     return '#777777';
   };
-
   const getTooltipText = (color) => {
     if (color === '#008b33') return 'correct';
     if (color === '#faca3b') return 'within 15 points';
@@ -109,15 +110,16 @@ export default function Feature() {
   };
 
   const handleSubmit = () => {
+
     if (submitAttemptsLeft <= 0) return;
     if (!data || data.length === 0) return;
     if (pointsRemaining > 0) {
       alert("must invest all stats");
       return;
+
     } else {
       // Direct lookup by ID/Index
       const targetEntry = data[TARGET_PRESET_ID];
-
       const numCore = coreValues.map(v => Number(v || 0));
       const numAttun = attunValues.map(v => Number(v || 0));
       const numPreCore = preCoreValues.map(v => Number(v || 0));
@@ -149,7 +151,7 @@ export default function Feature() {
     }
   };
 
-  const handleSOO = () => {
+  const handleSOO = () => { //shrine formula ty cyfer
     setPreCoreValues(coreValues.map(val => (val === '' ? '0' : val)));
     setPreAttunValues(attunValues.map(val => (val === '' ? '0' : val)));
 

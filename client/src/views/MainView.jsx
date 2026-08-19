@@ -120,7 +120,6 @@ export default function HomeView() {
             </div>
             <h2>Date: {date}</h2>
             <h2>Submitter: {submitter}</h2>
-
             <div>
               <h2>Time: {formatTime(seconds)}</h2>
               <button onClick={handleStopTimer} disabled={isStopped || seconds === 0}>
