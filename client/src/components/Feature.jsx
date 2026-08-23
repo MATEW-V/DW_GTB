@@ -8,7 +8,7 @@ const ATTUN_LABELS = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "S
 // ID FOR JSON BUILD OF THE DAY
 const TARGET_PRESET_ID = 0;
 
-export default function Feature() {
+export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
   const [coreValues, setCoreValues] = useState(Array(9).fill(''));
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
   const [preCoreValues, setPreCoreValues] = useState(Array(9).fill('0'));
@@ -94,6 +94,11 @@ export default function Feature() {
     setAttunIndicators(Array(7).fill('grey'));
     setPreCoreIndicators(Array(9).fill('grey'));
     setPreAttunIndicators(Array(7).fill('grey'));
+    setSubmitAttemptsLeft(3);
+
+    if (onResetTimer) {
+      onResetTimer();
+    }
   };
 
   //wordle indicators
@@ -110,21 +115,20 @@ export default function Feature() {
   };
 
   const handleSubmit = () => {
-
     if (submitAttemptsLeft <= 0) return;
     if (!data || data.length === 0) return;
+
     if (pointsRemaining > 0) {
       alert("must invest all stats");
       return;
-
     } else {
-      // Direct lookup by ID/Index
       const targetEntry = data[TARGET_PRESET_ID];
       const numCore = coreValues.map(v => Number(v || 0));
       const numAttun = attunValues.map(v => Number(v || 0));
       const numPreCore = preCoreValues.map(v => Number(v || 0));
       const numPreAttun = preAttunValues.map(v => Number(v || 0));
 
+      // Calculate total difference across all stats
       let totalDiffSum = 0;
 
       numCore.forEach((val, i) => {
@@ -146,7 +150,14 @@ export default function Feature() {
       setPreCoreIndicators(numPreCore.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.corevalues[i])));
       setPreAttunIndicators(numPreAttun.map((val, i) => getIndicatorColor(val, targetEntry.preshrine.attunvalues[i])));
 
-      // Decrement remaining submit uses
+      // Stop timer and trigger popup if guess correct OR out of tries
+      const isCorrect = totalDiffSum === 0;
+      const isLastAttempt = submitAttemptsLeft === 1;
+      
+      if (isCorrect || isLastAttempt) {
+        if (onStopTimer) onStopTimer();
+        if (onGameOver) onGameOver();
+      }
       setSubmitAttemptsLeft(prev => prev - 1);
     }
   };

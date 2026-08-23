@@ -18,15 +18,12 @@ function formatTime(totalSeconds) {
 export default function HomeView() {
   const [seconds, setSeconds] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(null);
   const playerRef = useRef(null);
   const isStoppedRef = useRef(false);
-
-  useEffect(() => {
-    isStoppedRef.current = isStopped;
-  }, [isStopped]);
 
   const targetBuild = useMemo(() => {
     if (!Array.isArray(data) || !data[TARGET_PRESET_ID]) return null;
@@ -60,11 +57,40 @@ export default function HomeView() {
   };
 
   const handleStopTimer = () => {
+    isStoppedRef.current = true;
     if (animFrameRef.current) {
       cancelAnimationFrame(animFrameRef.current);
       animFrameRef.current = null;
     }
     setIsStopped(true);
+
+    // Pause the YouTube video if the player exists and has the method
+    if (playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
+      playerRef.current.pauseVideo();
+    }
+  };
+
+  const handleGameOver = () => {
+    handleStopTimer();
+    setShowModal(true);
+  };
+
+  const handleResetTimer = () => {
+    if (animFrameRef.current) {
+      cancelAnimationFrame(animFrameRef.current);
+      animFrameRef.current = null;
+    }
+    startTimeRef.current = null;
+    isStoppedRef.current = false;
+    setIsStopped(false);
+    setSeconds(0);
+    setShowModal(false);
+
+    // Optionally stop or rewind the video on reset
+    if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
+      playerRef.current.seekTo(0);
+      playerRef.current.pauseVideo();
+    }
   };
 
   useEffect(() => {
@@ -122,15 +148,30 @@ export default function HomeView() {
             <h2>Submitter: {submitter}</h2>
             <div>
               <h2>Time: {formatTime(seconds)}</h2>
-              <button onClick={handleStopTimer} disabled={isStopped || seconds === 0}>
-                {isStopped ? 'Stopped' : 'Stop'}
-              </button>
             </div>
           </div>
-          <Feature />
+          <Feature
+            onStopTimer={handleStopTimer}
+            onResetTimer={handleResetTimer}
+            onGameOver={handleGameOver}
+          />
         </div>
       </main>
       <Footer />
+
+      {/* Blank Popup Modal with Close Button */}
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close-btn" onClick={() => setShowModal(false)}>
+              &times;
+            </button>
+            {/* EDIT YOUR POPUP CONTENT HERE */}
+            <h2>Game Over</h2>
+            <p>Time taken: {formatTime(seconds)}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
