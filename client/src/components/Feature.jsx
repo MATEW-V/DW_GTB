@@ -152,13 +152,21 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
 
       // Stop timer and trigger popup if guess correct OR out of tries
       const isCorrect = totalDiffSum === 0;
-      const isLastAttempt = submitAttemptsLeft === 1;
-      
-      if (isCorrect || isLastAttempt) {
-        if (onStopTimer) onStopTimer();
-        if (onGameOver) onGameOver();
+    const isLastAttempt = submitAttemptsLeft === 1;
+    const usedAttempts = 3 - submitAttemptsLeft + 1;
+
+    if (isCorrect || isLastAttempt) {
+      if (onStopTimer) onStopTimer();
+      if (onGameOver) {
+        onGameOver(usedAttempts, {
+          coreColors: numCore.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.corevalues[i])),
+          attunColors: numAttun.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.attunvalues[i])),
+          coreVals: numCore,
+          attunVals: numAttun,
+        });
       }
-      setSubmitAttemptsLeft(prev => prev - 1);
+    }
+    setSubmitAttemptsLeft(prev => prev - 1);
     }
   };
 
@@ -271,7 +279,7 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
               <span className="title">Shrine of Mastery</span>
               <div className="tf">= {"\u00A0\u00A0\u00A0\u00A0"}{som}</div>
             </div>
-           <div className="build-indicators">
+            <div className="build-indicators">
               <span className="title">Unobtainable</span>
               <div className="tf">= {"\u00A0\u00A0\u00A0\u00A0"}{unob}</div>
             </div>
@@ -370,9 +378,9 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
         <button className="soo" onClick={handleClear}>Clear Stats</button>
         <button className="reset" onClick={handleReset}>RESET</button>
-        <button 
-          className="submit" 
-          onClick={handleSubmit} 
+        <button
+          className="submit"
+          onClick={handleSubmit}
           disabled={submitAttemptsLeft <= 0}
         >
           SUBMIT ({submitAttemptsLeft}/3)

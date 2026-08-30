@@ -39,8 +39,8 @@
 }
 
 .menu-icon-img {
-  width: 28px;         /* Adjust width as needed */
-  height: 28px;        /* Adjust height as needed */
+  width: 40px;         /* Adjust width as needed */
+  height: 40px;        /* Adjust height as needed */
   object-fit: contain;  /* Prevents image distortion */
   display: block;
 }

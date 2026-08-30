@@ -19,11 +19,13 @@ export default function HomeView() {
   const [seconds, setSeconds] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [gameResults, setGameResults] = useState(null);
 
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(null);
   const playerRef = useRef(null);
   const isStoppedRef = useRef(false);
+  const [attemptsUsed, setAttemptsUsed] = useState(0);
 
   const targetBuild = useMemo(() => {
     if (!Array.isArray(data) || !data[TARGET_PRESET_ID]) return null;
@@ -70,9 +72,17 @@ export default function HomeView() {
     }
   };
 
-  const handleGameOver = () => {
+  const handleGameOver = (usedAttempts, resultsData) => {
     handleStopTimer();
+    if (usedAttempts !== undefined) setAttemptsUsed(usedAttempts);
+    if (resultsData) setGameResults(resultsData);
     setShowModal(true);
+  };
+
+  const getColorEmoji = (hexColor) => {
+    if (hexColor === '#008b33') return '🟩';
+    if (hexColor === '#faca3b') return '🟨';
+    return '⬜';
   };
 
   const handleResetTimer = () => {
@@ -84,7 +94,9 @@ export default function HomeView() {
     isStoppedRef.current = false;
     setIsStopped(false);
     setSeconds(0);
+    setAttemptsUsed(0);
     setShowModal(false);
+    setGameResults(null);
 
     // Optionally stop or rewind the video on reset
     if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
@@ -135,6 +147,44 @@ export default function HomeView() {
     };
   }, [videoId]);
 
+  const handleCopyResults = () => {
+    if (!gameResults) return;
+
+    const { coreColors, attunColors } = gameResults;
+
+    let gridText = '';
+    for (let i = 0; i < 6; i++) {
+      const coreEmoji = getColorEmoji(coreColors[i]);
+      const attunEmoji = getColorEmoji(attunColors[i]);
+      const wepIdx = i + 6;
+      const wepEmoji = wepIdx < coreColors.length ? getColorEmoji(coreColors[wepIdx]) : '';
+
+      const spacing1 = '         '; // 9 spaces
+      const spacing2 = wepEmoji ? '         ' : ''; // 9 spaces if weapon emoji exists
+
+      gridText += `${coreEmoji}${spacing1}${attunEmoji}${spacing2}${wepEmoji}\n`;
+    }
+
+    // 15 leading spaces aligns column 2 under ATT
+    gridText += `               ${getColorEmoji(attunColors[6])}`;
+
+    const shareText =
+      `DWGTB | I completed today's DW Guess the Build!
+submitted by ${submitter}
+time: ${formatTime(seconds)}
+attempts: ${attemptsUsed}/3
+
+CORE    ATT        WEP
+${gridText}
+play daily here: link`;
+
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Results copied to clipboard!');
+    }).catch((err) => {
+      console.error('Failed to copy: ', err);
+    });
+  };
+
   return (
     <div className="home-view-container">
       <Header />
@@ -166,9 +216,55 @@ export default function HomeView() {
             <button className="modal-close-btn" onClick={() => setShowModal(false)}>
               &times;
             </button>
-            {/* EDIT YOUR POPUP CONTENT HERE */}
-            <h2>Game Over</h2>
-            <p>Time taken: {formatTime(seconds)}</p>
+
+            <div className="modal-results-container">
+              <p className="modal-title">DWGTB | I completed today's DW Guess the Build!</p>
+              <p>submitted by {submitter}</p>
+              <p>time: {formatTime(seconds)}</p>
+              <p>attempts: {attemptsUsed}/3</p>
+
+              <div className="modal-grid-header">
+                <span>CORE</span>
+                <span>ATT</span>
+                <span>WEP</span>
+              </div>
+
+              {gameResults && (() => {
+                const { coreColors, attunColors } = gameResults;
+
+                return (
+                  <div className="modal-grid-body">
+                    {Array.from({ length: 6 }).map((_, i) => {
+                      const coreEmoji = getColorEmoji(coreColors[i]);
+                      const attunEmoji = getColorEmoji(attunColors[i]);
+                      const wepIdx = i + 6;
+                      const wepEmoji = wepIdx < coreColors.length ? getColorEmoji(coreColors[wepIdx]) : '';
+
+                      return (
+                        <div key={i} className="modal-grid-row">
+                          <span>{coreEmoji}</span>
+                          <span>{attunEmoji}</span>
+                          <span>{wepEmoji}</span>
+                        </div>
+                      );
+                    })}
+
+                    {/* 7th Attunement Row */}
+                    <div className="modal-grid-row">
+                      <span></span>
+                      <span>{getColorEmoji(attunColors[6])}</span>
+                      <span></span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <p className="modal-footer-link">play daily here: link</p>
+            </div>
+
+            <button className="copy-share-btn" onClick={handleCopyResults}>
+              Share Results / Copy to Clipboard
+            </button>
           </div>
         </div>
       )}
