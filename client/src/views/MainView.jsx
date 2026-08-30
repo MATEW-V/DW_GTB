@@ -189,6 +189,7 @@ play daily here: link`;
     <div className="home-view-container">
       <Header />
       <main className="home-content">
+        <h2>Next Build in: hh:mm:ss</h2>
         <div className="main-side-grid">
           <div className="clipbox">
             <div className="embed" style={{ width: '100%', maxWidth: '876px', aspectRatio: '16/9' }}>
