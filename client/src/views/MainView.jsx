@@ -5,9 +5,6 @@ import Footer from '../components/Footer';
 import data from '../assets/buildbank.json';
 import './MainView.css';
 
-// INDEX FOR JSON BUILD OF THE DAY
-const TARGET_PRESET_ID = 0;
-
 // Converts total seconds into MM:SS format
 function formatTime(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -15,7 +12,15 @@ function formatTime(totalSeconds) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
+const getDailyIndex = () => { //days
+  const daysSinceEpoch = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+  return (daysSinceEpoch - 1) % (data?.length || 1);
+};
+
 export default function HomeView() {
+  const [targetPresetId, setTargetPresetId] = useState(getDailyIndex);
+  const [timeLeft, setTimeLeft] = useState('');
+
   const [seconds, setSeconds] = useState(0);
   const [isStopped, setIsStopped] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -27,10 +32,38 @@ export default function HomeView() {
   const isStoppedRef = useRef(false);
   const [attemptsUsed, setAttemptsUsed] = useState(0);
 
-  const targetBuild = useMemo(() => {
-    if (!Array.isArray(data) || !data[TARGET_PRESET_ID]) return null;
-    return data[TARGET_PRESET_ID];
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date();
+      const targetReset = new Date(now);
+      targetReset.setUTCHours(24, 0, 0, 0); //upd
+
+      if (now >= targetReset) {
+        targetReset.setUTCDate(targetReset.getUTCDate() + 1);
+      }
+
+      const diff = Math.floor((targetReset - now) / 1000);
+
+      if (diff <= 0) {
+        setTargetPresetId(getDailyIndex());
+      }
+
+      const h = String(Math.floor(diff / 3600)).padStart(2, '0');
+      const m = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+      const s = String(diff % 60).padStart(2, '0');
+
+      setTimeLeft(`${h}:${m}:${s}`);
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
   }, []);
+
+  const targetBuild = useMemo(() => {
+    if (!Array.isArray(data) || !data[targetPresetId]) return null;
+    return data[targetPresetId];
+  }, [targetPresetId]);
 
   const videoUrl = targetBuild?.yt || '';
 
@@ -190,7 +223,7 @@ play daily here: link`;
     <div className="home-view-container">
       <Header />
       <main className="home-content">
-        <h2>Next Build in: hh:mm:ss</h2>
+        <h2>Next Build in: {timeLeft}</h2>
         <div className="main-side-grid">
           <div className="clipbox">
             <div className="embed" style={{ width: '100%', maxWidth: '876px', aspectRatio: '16/9' }}>
@@ -203,6 +236,9 @@ play daily here: link`;
             </div>
           </div>
           <Feature
+            key={targetPresetId}
+            targetPresetId={targetPresetId}
+            setTargetPresetId={setTargetPresetId}
             onStopTimer={handleStopTimer}
             onResetTimer={handleResetTimer}
             onGameOver={handleGameOver}

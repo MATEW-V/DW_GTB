@@ -5,10 +5,7 @@ import './Feature.css';
 const CORE_LABELS = ["Strength", "Fortitude", "Agility", "Inteligence", "Willpower", "Charisma", "Heavy", "Medium", "Light"];
 const ATTUN_LABELS = ["Flamecharm", "Frostdraw", "Thundercall", "Galebreath", "Shadowcast", "Ironsing", "Bloodrend"];
 
-// ID FOR JSON BUILD OF THE DAY
-const TARGET_PRESET_ID = 0;
-
-export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
+export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopTimer, onResetTimer, onGameOver }) {
   const [coreValues, setCoreValues] = useState(Array(9).fill(''));
   const [attunValues, setAttunValues] = useState(Array(7).fill(''));
   const [preCoreValues, setPreCoreValues] = useState(Array(9).fill('0'));
@@ -32,9 +29,9 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
 
   // lookup function 'const videoUrl = targetBuild?.yt || '';' format
   const targetBuild = useMemo(() => {
-    if (!Array.isArray(data) || !data[TARGET_PRESET_ID]) return null;
-    return data[TARGET_PRESET_ID];
-  }, []);
+    if (!Array.isArray(data) || !data[targetPresetId]) return null;
+    return data[targetPresetId];
+  }, [targetPresetId]);
 
   const som = targetBuild?.som || '';
   const sob = targetBuild?.sob || '';
@@ -122,7 +119,7 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
       alert("must invest all stats");
       return;
     } else {
-      const targetEntry = data[TARGET_PRESET_ID];
+      const targetEntry = data[targetPresetId];
       const numCore = coreValues.map(v => Number(v || 0));
       const numAttun = attunValues.map(v => Number(v || 0));
       const numPreCore = preCoreValues.map(v => Number(v || 0));
@@ -152,21 +149,21 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
 
       // Stop timer and trigger popup if guess correct OR out of tries
       const isCorrect = totalDiffSum === 0;
-    const isLastAttempt = submitAttemptsLeft === 1;
-    const usedAttempts = 3 - submitAttemptsLeft + 1;
+      const isLastAttempt = submitAttemptsLeft === 1;
+      const usedAttempts = 3 - submitAttemptsLeft + 1;
 
-    if (isCorrect || isLastAttempt) {
-      if (onStopTimer) onStopTimer();
-      if (onGameOver) {
-        onGameOver(usedAttempts, {
-          coreColors: numCore.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.corevalues[i])),
-          attunColors: numAttun.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.attunvalues[i])),
-          coreVals: numCore,
-          attunVals: numAttun,
-        });
+      if (isCorrect || isLastAttempt) {
+        if (onStopTimer) onStopTimer();
+        if (onGameOver) {
+          onGameOver(usedAttempts, {
+            coreColors: numCore.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.corevalues[i])),
+            attunColors: numAttun.map((val, i) => getIndicatorColor(val, targetEntry.postshrine.attunvalues[i])),
+            coreVals: numCore,
+            attunVals: numAttun,
+          });
+        }
       }
-    }
-    setSubmitAttemptsLeft(prev => prev - 1);
+      setSubmitAttemptsLeft(prev => prev - 1);
     }
   };
 
@@ -385,6 +382,10 @@ export default function Feature({ onStopTimer, onResetTimer, onGameOver }) {
         >
           SUBMIT ({submitAttemptsLeft}/3)
         </button>
+        {/* test butrton swappa
+        <button onClick={() => setTargetPresetId(prev => (prev + 1) % data.length)}>
+          Test Swap Build (Current ID: {targetPresetId})
+        </button>*/}
       </div>
     </div>
   );
