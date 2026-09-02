@@ -17,6 +17,8 @@ dist
 dist-ssr
 *.local
 
+client/src/assets/buildbank.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
