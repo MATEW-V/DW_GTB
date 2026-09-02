@@ -210,7 +210,7 @@ attempts: ${attemptsUsed}/3
 
 CORE    ATT        WEP
 ${gridText}
-play daily here: link`;
+play daily here: https://dw-gtb.vercel.app`;
 
     navigator.clipboard.writeText(shareText).then(() => {
       alert('Results copied to clipboard!');
@@ -297,7 +297,7 @@ play daily here: link`;
                 );
               })()}
 
-              <p className="modal-footer-link">play daily here: link</p>
+              <p className="modal-footer-link">play daily here: https://dw-gtb.vercel.app</p>
             </div>
 
             <button className="copy-share-btn" onClick={handleCopyResults}>
