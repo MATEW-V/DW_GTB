@@ -58,7 +58,7 @@ export default function SubmitView() {
           <div className="submit-info-box">
             <p className="feature-label-text">How to submit:</p>
             <p className="submit-description">
-              Have an extraordinary build you want featured as the daily showcase? 
+              Want your build to showcase? 
               Fill out the links below. Make sure your video showcase and build planner links are accessible to anyone with the URL.
             </p>
           </div>

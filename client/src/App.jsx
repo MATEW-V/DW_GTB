@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Analytics } from '@vercel/analytics/react';
 import MainView from "./views/MainView"; 
 import SubmitView from './views/SubmitView';
 import './App.css';
@@ -14,6 +15,7 @@ function App() {
           <Route path="/login" element={<div>Login View</div>} />
           <Route path="*" element={<div>404 Page Not Found</div>} />
         </Routes>
+        <Analytics />
       </BrowserRouter>
   );
 }
