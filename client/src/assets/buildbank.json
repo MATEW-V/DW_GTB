@@ -14,5 +14,37 @@
       "corevalues": ["40", "50", "25", "30", "65", "0", "100", "0", "0"],
       "attunvalues": ["20", "0", "0", "0", "0", "0", "0"]
     }
+  },
+  {
+    "user": "1mat_ew",
+    "yt": "https://www.youtube.com/embed/wryqI2Jcokg",
+    "date": "10/18/2024",
+    "unob": "FALSE",
+    "som": "TRUE",
+    "sob": "FALSE",
+    "preshrine": { 
+      "corevalues": ["40", "50", "1", "50", "80", "1", "1", "0", "0"],
+      "attunvalues": ["3", "0", "0", "60", "0", "1", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["25", "25", "25", "25", "55", "25", "75", "0", "0"],
+      "attunvalues": ["30", "0", "0", "25", "0", "22", "0"]
+    }
+  },
+  {
+    "user": "slimeyboi217",
+    "yt": "https://www.youtube.com/embed/9nbXw-O78ps",
+    "date": "10/18/2024",
+    "unob": "FALSE",
+    "som": "TRUE",
+    "sob": "FALSE",
+    "preshrine": { 
+      "corevalues": ["0", "1", "1", "50", "1", "1", "0", "0", "100"],
+      "attunvalues": ["0", "0", "0", "100", "1", "0", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["0", "50", "25", "25", "25", "25", "0", "0", "75"],
+      "attunvalues": ["0", "0", "0", "25", "81", "0", "0"]
+    }
   }
 ]
