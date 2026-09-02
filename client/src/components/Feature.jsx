@@ -22,10 +22,22 @@ export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopT
 
   // submit attempt counter state
   const [submitAttemptsLeft, setSubmitAttemptsLeft] = useState(3);
+  const activeAttunementsCount = attunValues.filter(val => Number(val || 0) > 0).length;
+
+  const bonusPoints = Math.max(0, activeAttunementsCount - 1);
+  const maxTotalPoints = 330 + bonusPoints;
 
   // total point usage tracking
   const totalPointUsed = coreValues.reduce((sum, val) => sum + Number(val || 0), 0) + attunValues.reduce((sum, val) => sum + Number(val || 0), 0);
-  const pointsRemaining = 330 - totalPointUsed;
+  const pointsRemaining = maxTotalPoints - totalPointUsed;
+
+  // Dynamic Power Level Calculation
+  const powerLevel = useMemo(() => {
+    if (totalPointUsed < 30) return 0;
+    // Power 1 starts at 30, each level requires 15 points (Power 2 = 45, Power 3 = 60 ... Power 20 = 315+)
+    const calculatedPower = Math.floor((totalPointUsed - 30) / 15) + 1;
+    return Math.min(20, calculatedPower);
+  }, [totalPointUsed]);
 
   // lookup function 'const videoUrl = targetBuild?.yt || '';' format
   const targetBuild = useMemo(() => {
@@ -39,17 +51,30 @@ export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopT
 
   const handleStatChange = (part, index, value) => {
     let cleanValue = value.replace(/[^0-9]/g, ''); // Strip non-digit chars
+    
     if (cleanValue !== '') {
       let num = Number(cleanValue);
-      const targetArray = part === 'A' ? coreValues : attunValues;
 
-      // Point tracking for 330 total max
+      // determine prospective state to compute exact active attunement bonus dynamically
+      const nextAttunValues = [...attunValues];
+      if (part === 'B') {
+        nextAttunValues[index] = cleanValue;
+      }
+
+      const nextActiveAttunCount = nextAttunValues.filter(v => Number(v || 0) > 0).length;
+      const nextBonusPoints = Math.max(0, nextActiveAttunCount - 1);
+      const dynamicMaxPoints = 330 + nextBonusPoints;
+
+      // point tracking against dynamic maximum
+      const targetArray = part === 'A' ? coreValues : attunValues;
       const currentVal = Number(targetArray[index] || 0);
       const totalUsedByOthers = totalPointUsed - currentVal;
-      const maxAllowedForThisField = 330 - totalUsedByOthers;
+      const maxAllowedForThisField = dynamicMaxPoints - totalUsedByOthers;
+
       if (num > maxAllowedForThisField) {
         num = maxAllowedForThisField;
       }
+      
       // Individual stat limits
       if (num > 100) num = 100;
       if (num < 0) num = 0;
@@ -73,6 +98,7 @@ export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopT
       setPreAttunValues(Array(7).fill(''));
     }
   };
+
   //stat clear
   const handleClear = () => {
     setCoreValues(Array(9).fill(''));
@@ -370,6 +396,7 @@ export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopT
       {/* Control Buttons */}
       <div className="feature-buttons">
         <h3 className="part-title">SHRINE & BUTTONS</h3>
+        <p className="feature-label-text">Power: {powerLevel}</p>
         <p className="feature-label-text">Points Remaining: {pointsRemaining}</p>
         <button className="soo" onClick={handleSOO}>Shrine of Order</button>
         <button className="soo" onClick={handleLoadPre}>Load Preshrine</button>
@@ -382,10 +409,6 @@ export default function Feature({ targetPresetId = 0, setTargetPresetId, onStopT
         >
           SUBMIT ({submitAttemptsLeft}/3)
         </button>
-        {/* test butrton swappa
-        <button onClick={() => setTargetPresetId(prev => (prev + 1) % data.length)}>
-          Test Swap Build (Current ID: {targetPresetId})
-        </button>*/}
       </div>
     </div>
   );
