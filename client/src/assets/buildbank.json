@@ -62,5 +62,21 @@
       "corevalues": ["25", "50", "80", "0", "40", "25", "88", "0", "0"],
       "attunvalues": ["0", "0", "0", "22", "0", "0", "0"]
     }
+  },
+  {
+    "user": "noobscootery",
+    "yt": "https://www.youtube.com/embed/ovs4Rc0sk0o",
+    "date": "8/23/2026",
+    "unob": "FALSE",
+    "som": "FALSE",
+    "sob": "FALSE",
+    "preshrine": { 
+      "corevalues": ["1", "1", "75", "25", "40", "25", "1", "0", "0"],
+      "attunvalues": ["0", "0", "1", "0", "0", "0", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["40", "50", "50", "17", "17", "17", "55", "0", "0"],
+      "attunvalues": ["0", "0", "80", "0", "0", "0", "0"]
+    }
   }
 ]
