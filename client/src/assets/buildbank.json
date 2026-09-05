@@ -78,5 +78,21 @@
       "corevalues": ["40", "50", "50", "17", "17", "17", "55", "0", "0"],
       "attunvalues": ["0", "0", "80", "0", "0", "0", "0"]
     }
+  },
+  {
+    "user": "eric696765",
+    "yt": "https://www.youtube.com/embed/kRvUfpzeiLo",
+    "date": "8/23/2026",
+    "unob": "FALSE",
+    "som": "TRUE",
+    "sob": "TRUE",
+    "preshrine": { 
+      "corevalues": ["1", "30", "1", "40", "40", "0", "1", "0", "0"],
+      "attunvalues": ["0", "1", "0", "0", "0", "0", "0"]
+    },
+    "postshrine": {
+      "corevalues": ["25", "90", "25", "16", "16", "0", "80", "0", "0"],
+      "attunvalues": ["0", "78", "0", "0", "0", "0", "0"]
+    }
   }
 ]
